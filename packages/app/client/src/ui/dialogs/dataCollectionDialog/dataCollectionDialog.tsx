@@ -31,35 +31,40 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+import { DefaultButton, Dialog, DialogFooter, PrimaryButton } from '@bfemulator/ui-react';
 import * as React from 'react';
-import { Component } from 'react';
+import { Component, ReactNode } from 'react';
 
-import * as styles from './Header.scss';
+import * as styles from '../dialogStyles.scss';
 
-interface HeaderProps {
-  appName: string;
-  appId: string;
-  version: string;
-  slot: string;
+export interface DataCollectionDialogProps {
+  hideDialog: (dataCollectionEnabled: boolean) => void;
 }
 
-export class Header extends Component<HeaderProps, {}> {
-  public render() {
+export class DataCollectionDialog extends Component<DataCollectionDialogProps, {}> {
+  public render(): ReactNode {
     return (
-      <div className={styles.header}>
-        {this.appName}
-        <span className={styles.appId}>App ID: {this.props.appId}</span>
-        <span>Version: {this.props.version}</span>
-        <span>Slot: {this.props.slot}</span>
-      </div>
+      <Dialog className={styles.dialogMedium} cancel={this.onConfirmOrCancel} title="Help us improve?">
+        <p>
+          The Emulator includes a telemetry feature that collects usage information. It is important that the Emulator
+          team understands how the tool is being used so that it can be improved.
+        </p>
+        <p>You can turn data collection on or off at any time in your Emulator Settings.</p>
+        <p>
+          <a target="__blank" href="https://privacy.microsoft.com/privacystatement">
+            Privacy statement
+          </a>
+        </p>
+        <DialogFooter>
+          <DefaultButton text="Not now" onClick={this.onConfirmOrCancel} />
+          <PrimaryButton text="Yes, collect data" name="yes" onClick={this.onConfirmOrCancel} />
+        </DialogFooter>
+      </Dialog>
     );
   }
 
-  private get appName(): React.ReactNode {
-    return this.props.appName ? (
-      <span>
-        <strong>{this.props.appName}</strong>
-      </span>
-    ) : null;
-  }
+  private onConfirmOrCancel = (ev: React.MouseEvent<HTMLButtonElement>): void => {
+    const collectData = !!(ev.target as HTMLButtonElement).name;
+    this.props.hideDialog(collectData);
+  };
 }
