@@ -145,12 +145,12 @@ export class Chat extends Component<ChatProps, ChatState> {
     const { type, value } = cardAction;
 
     switch (type) {
-      case 'signin':
+      case 'signin': {
         const popup = window.open();
         const url = await getSignInUrl();
         popup.location.href = url;
         break;
-
+      }
       case 'downloadFile':
       case 'playAudio':
       case 'playVideo':
